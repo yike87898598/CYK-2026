@@ -1,0 +1,754 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="陈艺科 / CHEN YIKE — 品牌、汽车与商业创意作品集。">
+  <title>CHEN YIKE / 陈艺科</title>
+  <style>
+    :root {
+      --black: #030405;
+      --ink: #0a0b0d;
+      --white: #f2f2f0;
+      --muted: #aaa;
+      --line: rgba(242,242,240,.22);
+      --soft-line: rgba(242,242,240,.075);
+      --signal: #f2f2f0;
+      --cols: 6;
+      --pad: clamp(18px, 2.25vw, 42px);
+      --sans: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", Arial, sans-serif;
+      --serif: "Songti SC", SimSun, "Times New Roman", serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { background: var(--black); scroll-behavior: smooth; }
+    body { margin: 0; color: var(--white); background: var(--black); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+    body.locked { overflow: hidden; }
+    a { color: inherit; }
+    button { color: inherit; font: inherit; }
+    img { max-width: 100%; }
+    section { position: relative; scroll-margin-top: 52px; }
+
+    .grid-lines {
+      position: absolute;
+      inset: 0 var(--pad);
+      z-index: 0;
+      display: grid;
+      grid-template-columns: repeat(var(--cols), 1fr);
+      pointer-events: none;
+    }
+    .grid-lines i { border-left: 1px solid var(--soft-line); }
+    .grid-lines i:last-child { border-right: 1px solid var(--soft-line); }
+    .section-inner { position: relative; z-index: 1; margin: 0 var(--pad); }
+    .eyebrow { color: var(--muted); font-size: 11px; letter-spacing: .16em; line-height: 1.35; text-transform: uppercase; }
+    .eyebrow.light { color: var(--white); }
+    .placeholder-tag { display: inline-block; padding: 5px 8px; border: 1px solid var(--line); color: var(--muted); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; }
+
+    .opening { height: 220svh; background: var(--black); }
+    .opening-sticky { position: sticky; top: 0; height: 100svh; overflow: hidden; }
+    .opening-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .opening-shade { position: absolute; inset: 0; z-index: 1; background: #000; opacity: var(--opening-shade, 0); pointer-events: none; }
+    .wordmark {
+      position: absolute;
+      z-index: 3;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 10.833333vw;
+      opacity: var(--wordmark-opacity, 1);
+      pointer-events: none;
+    }
+    .wordmark-art {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      width: 100%;
+      height: auto;
+      max-width: none;
+      transform: translate(-50%, var(--wordmark-y, 0px));
+    }
+
+    .nav {
+      position: fixed;
+      top: var(--nav-top, 10.833333vw);
+      right: 0;
+      left: 0;
+      z-index: 30;
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      margin: 0 var(--pad);
+      border-bottom: 1px solid var(--line);
+      background: rgba(3,4,5,var(--nav-alpha, .04));
+      backdrop-filter: blur(var(--nav-blur, 0px));
+    }
+    .nav a {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      min-height: 50px;
+      padding: 14px 12px;
+      border-left: 1px solid var(--soft-line);
+      color: var(--white);
+      font-size: 11px;
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+    .nav-cn { font-size: 12px; letter-spacing: .04em; white-space: nowrap; }
+    .nav a:last-child { border-right: 1px solid var(--soft-line); }
+    .nav a::after { content: ""; position: absolute; right: 12px; bottom: 7px; left: 12px; height: 2px; background: transparent; }
+    .nav a:hover::after,
+    .nav a.active::after { background: var(--signal); }
+
+    .hero {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      min-height: 0;
+      overflow: hidden;
+      background: transparent;
+      pointer-events: none;
+    }
+    .hero-inner { min-height: 100svh; display: block; }
+    .hero-portrait {
+      position: absolute;
+      right: 3vw;
+      bottom: 0;
+      width: 42vw;
+      height: 76svh;
+      margin: 0;
+      overflow: hidden;
+      opacity: var(--portrait-reveal, 0);
+      transform: translateX(var(--portrait-x, 7vw));
+    }
+    .hero-portrait::before { content: ""; position: absolute; z-index: 1; inset: 0; background: linear-gradient(90deg, var(--black), transparent 33%), linear-gradient(0deg, var(--black), transparent 28%); pointer-events: none; }
+    .hero-portrait img { width: 100%; height: 100%; object-fit: contain; object-position: center bottom; }
+    .hero-copy { position: absolute; z-index: 3; top: var(--copy-top, 75%); left: var(--copy-left, 27%); width: var(--copy-width, 62%); padding: 0; opacity: var(--copy-opacity, 0); transform: translateY(-50%); }
+    .hero-copy h1 { margin: 22px 0 22px; font-size: clamp(14px, 1.25vw, 21px); font-weight: 400; line-height: 1.2; letter-spacing: .08em; }
+    .hero-copy h1 span { display: inline; }
+    .hero-copy h1 span + span::before { content: " / "; }
+    .hero-intro { max-width: none; margin: 0; color: var(--white); font-size: clamp(27px, 3.1vw, 56px); line-height: 1.18; letter-spacing: -.035em; }
+    .hero-detail { max-width: 620px; margin: 22px 0 0; color: #b5b5b5; font-size: clamp(14px, 1.05vw, 18px); font-weight: 300; line-height: 1.55; }
+    .hero-meta { position: absolute; right: 3vw; bottom: 4svh; z-index: 2; padding: 0; font-size: 12px; line-height: 1.7; opacity: var(--portrait-reveal, 0); }
+    .hero-meta strong { display: block; margin-bottom: 14px; font-size: 16px; font-weight: 400; }
+    .hero-caption { position: absolute; right: 18px; top: 18px; z-index: 2; }
+
+    .manifesto { padding: clamp(100px, 15vw, 240px) 0; border-bottom: 1px solid var(--line); }
+    .manifesto-grid { display: grid; grid-template-columns: repeat(6, 1fr); }
+    .manifesto-copy { grid-column: 2 / span 4; }
+    .manifesto-copy p { margin: 32px 0 0; font-size: clamp(34px, 4.6vw, 82px); font-weight: 400; line-height: 1.04; letter-spacing: -.045em; }
+    .manifesto-copy p span { color: var(--muted); }
+
+    .profile { padding: 120px 0 150px; border-bottom: 1px solid var(--line); }
+    .profile-grid { display: grid; grid-template-columns: repeat(6, 1fr); }
+    .profile-data { grid-column: 1 / span 2; padding-right: 30px; }
+    .profile-data h2 { margin: 28px 0 48px; font-size: clamp(44px, 6vw, 100px); font-weight: 500; line-height: .88; letter-spacing: -.055em; }
+    .data-list { margin: 0; }
+    .data-list div { display: grid; grid-template-columns: 94px 1fr; padding: 14px 0; border-top: 1px solid var(--line); }
+    .data-list dt { color: var(--muted); font-size: 10px; letter-spacing: .13em; text-transform: uppercase; }
+    .data-list dd { margin: 0; font-size: 13px; line-height: 1.45; }
+    .timeline { grid-column: 3 / span 4; }
+    .timeline-item { display: grid; grid-template-columns: .8fr 1.35fr 1.85fr; gap: 20px; padding: 30px 0 34px; border-top: 1px solid var(--line); }
+    .timeline-item:last-child { border-bottom: 1px solid var(--line); }
+    .timeline-year { color: var(--muted); font-size: clamp(17px, 1.45vw, 25px); }
+    .timeline-title { font-size: clamp(20px, 1.85vw, 32px); line-height: 1.15; }
+    .timeline-title small { display: block; margin-top: 8px; color: var(--muted); font-size: 12px; line-height: 1.4; }
+    .timeline-copy { color: var(--muted); font-size: 14px; line-height: 1.65; }
+    .timeline-copy strong { color: var(--white); font-weight: 400; }
+
+    .capability { padding: 120px 0 150px; border-bottom: 1px solid var(--line); }
+    .cap-head { display: grid; grid-template-columns: repeat(6, 1fr); margin-bottom: 80px; }
+    .cap-head h2 { grid-column: 2 / span 4; margin: 28px 0 0; font-size: clamp(46px, 6.5vw, 116px); font-weight: 500; line-height: .9; letter-spacing: -.06em; }
+    .cap-head .eyebrow { grid-column: 1; }
+    .cap-grid { display: grid; grid-template-columns: repeat(6, 1fr); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .cap-item { min-height: 285px; padding: 22px 18px 28px; border-left: 1px solid var(--line); }
+    .cap-item:last-child { border-right: 1px solid var(--line); }
+    .cap-item b { display: block; margin: 64px 0 18px; font-size: clamp(24px, 2.3vw, 39px); font-weight: 400; line-height: 1.05; letter-spacing: -.04em; }
+    .cap-item p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.62; }
+    .flow { margin-top: 100px; }
+    .flow h3 { margin: 26px 0 40px; font-size: clamp(28px, 4vw, 70px); font-weight: 400; letter-spacing: -.04em; }
+    .flow-steps { display: grid; grid-template-columns: repeat(6, 1fr); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .flow-step { position: relative; isolation: isolate; min-height: 140px; padding: 18px 14px; border-left: 1px solid var(--line); background: #090909; overflow: hidden; }
+    .flow-step:last-child { border-right: 1px solid var(--line); }
+    .flow-step::before { content: ""; position: absolute; inset: 0; z-index: -2; background: var(--flow-image) center / cover no-repeat; opacity: .78; }
+    .flow-step::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(0,0,0,.54), rgba(0,0,0,.78)); }
+    .flow-step:nth-child(1) { --flow-image: url("assets/flow/01.webp"); }
+    .flow-step:nth-child(2) { --flow-image: url("assets/flow/02.webp"); }
+    .flow-step:nth-child(3) { --flow-image: url("assets/flow/03.webp"); }
+    .flow-step:nth-child(4) { --flow-image: url("assets/flow/04.webp"); }
+    .flow-step:nth-child(5) { --flow-image: url("assets/flow/05.webp"); }
+    .flow-step:nth-child(6) { --flow-image: url("assets/flow/06.webp"); }
+    .flow-step span { color: var(--muted); font-size: 10px; letter-spacing: .12em; }
+    .flow-step b { display: block; margin-top: 34px; font-size: 17px; font-weight: 400; }
+
+    .cases { padding: 120px 0 160px; border-bottom: 1px solid var(--line); }
+    .cases-head { display: grid; grid-template-columns: repeat(6, 1fr); margin-bottom: 90px; }
+    .cases-head h2 { grid-column: 1 / -1; margin: 28px 0 0; font-size: clamp(48px, 7.2vw, 126px); font-weight: 500; line-height: .95; letter-spacing: -.065em; }
+    .cases-head .eyebrow { grid-column: 1; }
+    .project { display: grid; grid-template-columns: repeat(6, 1fr); min-height: 680px; margin-bottom: 100px; }
+    .project:last-child { margin-bottom: 0; }
+    .project-media {
+      position: relative;
+      grid-column: 1 / span 4;
+      align-self: center;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      background: #08090b;
+    }
+    .project-media img { display: block; width: 100%; height: 100%; object-fit: contain; }
+    .project-carousel { position: absolute; inset: 0; }
+    .project-carousel img { position: absolute; inset: 0; }
+    .project-carousel img + img { animation: project-crossfade 10s infinite; }
+    @keyframes project-crossfade { 0%, 43%, 100% { opacity: 0; } 50%, 93% { opacity: 1; } }
+    @media (prefers-reduced-motion: reduce) { .project-carousel img + img { display: none; animation: none; } }
+    .project-media video { display:block; width:100%; height:100%; object-fit:cover; }
+    .project-media:is(a,button) { padding:0; color:inherit; font:inherit; text-align:left; text-decoration:none; cursor:pointer; }
+    .project-media:is(a,button):focus-visible { outline:2px solid var(--white); outline-offset:3px; }
+    .project-media::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 60%, rgba(0,0,0,.72)); pointer-events: none; }
+    .project[data-case="icar03"] .project-media::after { display: none; }
+    .project[data-case="qq3"] .project-media::after { display: none; }
+    .project-media__title { position: absolute; z-index: 2; left: 22px; bottom: 20px; max-width: 70%; font-size: clamp(26px, 3vw, 54px); line-height: .95; letter-spacing: -.04em; }
+    .project-media__title small { display: block; margin-bottom: 10px; font-size: 10px; font-weight: 400; letter-spacing: .14em; text-transform: uppercase; }
+    .project-media__tagline { display: block; margin-top: 10px; font-size: clamp(14px, 1.35vw, 20px); line-height: 1.25; letter-spacing: 0; }
+    .visual-placeholder { display: grid; place-items: center; width: 100%; height: 100%; text-align: center; background: #07080a; }
+    .visual-placeholder strong { font-size: clamp(38px, 6vw, 108px); font-weight: 500; line-height: .84; letter-spacing: -.06em; }
+    .visual-placeholder span { display: block; margin-top: 24px; color: var(--muted); font-size: 10px; letter-spacing: .14em; }
+    .project-copy { grid-column: 5 / span 2; align-self: center; padding: 30px 22px 30px 30px; }
+    .project-copy h3 { margin: 30px 0 12px; font-size: clamp(34px, 4vw, 72px); font-weight: 500; line-height: .92; letter-spacing: -.05em; }
+    .project-lead { margin: 0 0 38px; color: var(--white); font-size: clamp(18px, 1.7vw, 28px); line-height: 1.35; }
+    .project-points { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }
+    .project-points li { padding: 14px 0; border-bottom: 1px solid var(--line); color: var(--muted); font-size: 13px; line-height: 1.55; }
+    .project-points strong { color: var(--white); font-weight: 400; }
+    .project-open { display: inline-flex; margin-top: 34px; padding: 12px 16px; border: 1px solid var(--white); background: transparent; cursor: pointer; color: var(--white); font-size: 11px; letter-spacing: .12em; text-decoration: none; text-transform: uppercase; }
+    .project-open:hover { color: var(--black); background: var(--white); }
+    .project.reverse .project-media { grid-column: 3 / span 4; }
+    .project.reverse .project-copy { grid-column: 1 / span 2; grid-row: 1; padding-left: 0; }
+
+    .archive { padding: 120px 0 150px; border-bottom: 1px solid var(--line); overflow: hidden; background: var(--black); }
+    .archive-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .5; pointer-events: none; }
+    .archive-head { display: grid; grid-template-columns: repeat(6, 1fr); margin-bottom: 66px; }
+    .archive-head h2 { grid-column: 2 / span 4; margin: 28px 0 0; font-size: clamp(48px, 7.2vw, 126px); font-weight: 500; line-height: .85; letter-spacing: -.065em; }
+    .archive-track { position: relative; z-index: 1; display: flex; gap: 12px; overflow-x: auto; padding: 0 var(--pad) 28px; overscroll-behavior-inline: contain; scrollbar-color: var(--white) #17181a; }
+    .archive-card { flex: 0 0 min(42vw, 760px); }
+    .archive-visual { position: relative; aspect-ratio: 16 / 9; overflow: hidden; border: 1px solid var(--line); background: #08090b; }
+    .archive-visual img { width: 100%; height: 100%; object-fit: contain; transition: transform .45s ease; }
+    .archive-card:hover img { transform: scale(1.025); }
+    .archive-label { display: flex; justify-content: space-between; gap: 20px; padding: 14px 0; color: var(--muted); font-size: 11px; text-transform: uppercase; }
+    .archive-label strong { color: var(--white); font-weight: 400; }
+    .archive-downloads { position: relative; z-index: 1; margin-top: 76px; border-top: 1px solid var(--line); }
+    .archive-downloads h3 { margin: 28px 0 30px; font-size: clamp(25px, 3vw, 48px); font-weight: 400; letter-spacing: -.04em; }
+    .archive-pdf-list { display: grid; grid-template-columns: repeat(2, 1fr); border-top: 1px solid var(--line); }
+    .archive-pdf-list a { display: flex; justify-content: space-between; gap: 20px; padding: 18px 10px; border-bottom: 1px solid var(--line); color: var(--white); font-size: 13px; text-decoration: none; }
+    .archive-pdf-list a:nth-child(odd) { padding-right: 22px; border-right: 1px solid var(--line); }
+    .archive-pdf-list a:nth-child(even) { padding-left: 22px; }
+    .archive-pdf-list a:hover { background: rgba(255,255,255,.1); }
+    .archive-pdf-list small { color: var(--muted); font-size: 11px; white-space: nowrap; }
+    .archive-confidential { margin: 24px 0 0; color: var(--muted); font-size: 12px; line-height: 1.6; }
+
+    .brands { padding: 120px 0 150px; border-bottom: 1px solid var(--line); }
+    .brand-group + .brand-group { margin-top: 100px; }
+    .brand-group h2 { margin: 26px 0 45px; font-size: clamp(36px, 4.7vw, 82px); font-weight: 400; letter-spacing: -.045em; }
+    .brand-wall { display: flex; flex-wrap: wrap; border-top: 1px solid var(--line); background: #000; }
+    .brand-cell { display: grid; place-items: center; flex: 1 0 16.6667%; min-height: 130px; padding: 22px 12px; overflow: hidden; border-left: 1px solid var(--line); border-bottom: 1px solid var(--line); color: var(--muted); font-size: clamp(13px, 1.3vw, 22px); text-align: center; }
+    .brand-cell:nth-child(6n), .brand-cell:last-child { border-right: 1px solid var(--line); }
+    .brand-cell:hover { color: var(--white); background: #101114; }
+    .brand-cell:has(.logo-on-white):hover { background: #000; }
+    .brand-cell img { display: block; width: min(80%, 180px); height: 68px; object-fit: contain; filter: brightness(0) invert(.73); }
+    .brand-cell img.logo-md { transform: scale(1.35); }
+    .brand-cell img.logo-lg { transform: scale(1.7); }
+    .brand-cell img.logo-lynk { transform: scale(3.2); }
+    .brand-cell img.logo-sm { transform: scale(.72); }
+    .brand-cell img.logo-on-white { filter: invert(1) brightness(.73); mix-blend-mode: screen; }
+    .brand-cell img.logo-fulwin { filter: url(#fulwin-cutout); }
+    .brand-cell img.logo-ford { transform: scale(.82); }
+    .brand-cell img.logo-audi { transform: scale(2); }
+    .brand-cell img.logo-nb { transform: scale(1.15); }
+    .brand-cell img.logo-disney, .brand-cell img.logo-pernod { transform: scale(.85); }
+    .brand-cell img.logo-tone { filter: grayscale(1) brightness(2.8); }
+    .brand-cell img.logo-wuliangye { width: min(80%, 160px); object-fit: cover; object-position: center 10%; filter: url(#white-logo-cutout); }
+    .brand-cell img.logo-yuewen { object-fit: cover; object-position: center 47%; }
+    .brand-cell span { color: #aaa; font-size: 12px; letter-spacing: .06em; }
+
+    .contact { min-height: 100svh; display: flex; align-items: center; overflow: hidden; background: #000; }
+    .contact-corner-row { position: absolute; z-index: 3; left: var(--pad); right: var(--pad); display: flex; justify-content: space-between; gap: 32px; font-size: 11px; line-height: 1.35; text-transform: uppercase; }
+    .contact-corner-row.top { top: 90px; align-items: flex-start; }
+    .contact-corner-row.bottom { bottom: 32px; align-items: flex-end; }
+    .contact-corner-row a { display: block; width: fit-content; text-decoration: none; }
+    .contact-corner-row a:hover { text-decoration: underline; text-underline-offset: 3px; }
+    .contact-corner-row .right { text-align: right; }
+    .contact-corner-row .right a { margin-left: auto; }
+    .contact-clock { display: flex; justify-content: space-between; gap: 36px; min-width: 210px; }
+    .contact-clock strong { font-weight: 400; }
+    .contact-grid { position: relative; z-index: 2; display: grid; grid-template-columns: repeat(6, 1fr); width: 100%; }
+    .contact-copy { grid-column: 2 / span 4; text-align: center; }
+    .contact-copy h2 { position: relative; height: clamp(300px, 28vw, 540px); margin: 20px 0 36px; }
+    .contact-logo-video { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
+    .contact-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; }
+    .contact-links a { padding: 13px 16px; border: 1px solid var(--white); font-size: 12px; text-decoration: none; }
+    .wechat-card { display: grid; grid-template-columns: 110px 1fr; gap: 18px; align-items: center; width: min(380px, 100%); margin: 42px auto 0; padding: 16px; border: 1px solid var(--line); background: rgba(0,0,0,.45); text-align: left; }
+    .qr-placeholder { display: grid; place-items: center; aspect-ratio: 1; border: 1px solid var(--line); color: var(--muted); font-size: 9px; letter-spacing: .12em; text-align: center; }
+    .qr-placeholder img { display: block; width: 100%; height: 100%; aspect-ratio: 1; object-fit: cover; }
+    .wechat-card strong { display: block; margin-bottom: 8px; font-size: 18px; font-weight: 400; }
+    .wechat-card span { color: var(--muted); font-size: 12px; line-height: 1.5; }
+
+    dialog { width: min(1440px, calc(100vw - 30px)); max-height: calc(100svh - 30px); padding: 0; overflow: auto; border: 1px solid var(--line); color: var(--white); background: var(--black); }
+    dialog::backdrop { background: rgba(0,0,0,.88); backdrop-filter: blur(12px); }
+    .dialog-close { position: sticky; top: 14px; float: right; z-index: 3; width: 44px; height: 44px; margin: 14px; border: 1px solid var(--white); background: var(--black); cursor: pointer; }
+    .dialog-grid { clear: both; display: grid; grid-template-columns: repeat(6, 1fr); min-height: 78svh; border-top: 1px solid var(--line); }
+    .dialog-visual { grid-column: 1 / span 4; min-height: 70svh; border-right: 1px solid var(--line); }
+    .dialog-copy { grid-column: 5 / span 2; padding: 44px 30px; }
+    .dialog-copy h2 { margin: 34px 0 20px; font-size: clamp(38px, 4.5vw, 74px); font-weight: 500; line-height: .9; letter-spacing: -.05em; }
+    .dialog-copy p { color: var(--muted); font-size: 14px; line-height: 1.7; }
+    .dialog-slots { margin-top: 46px; }
+    .dialog-slot { padding: 15px 0; border-top: 1px solid var(--line); font-size: 12px; }
+
+    @keyframes drift { from { transform: translateX(-2%); } to { transform: translateX(-16%); } }
+    @keyframes pulse { from { opacity: .2; transform: rotate(-10deg) scale(1.1) translateX(-3%); } to { opacity: .45; transform: rotate(-10deg) scale(1.28) translateX(3%); } }
+
+    @media (max-width: 900px) {
+      :root { --cols: 3; }
+      .nav { grid-template-columns: repeat(3, 1fr); }
+      .nav a:nth-child(3n) { border-right: 1px solid var(--soft-line); }
+      .wordmark { height: 10.833333vw; }
+      .wordmark-art { width: 100%; height: auto; }
+      .hero-inner, .profile-grid, .cap-head, .cases-head, .project, .archive-head, .contact-grid { grid-template-columns: repeat(3, 1fr); }
+      .hero-copy { left: 4%; width: 38%; padding: 0; }
+      .hero-portrait { width: 52vw; height: 60svh; }
+      .hero-meta { z-index: 2; }
+      .manifesto-grid { grid-template-columns: repeat(3, 1fr); }
+      .manifesto-copy { grid-column: 1 / span 3; }
+      .profile-data, .timeline { grid-column: 1 / span 3; }
+      .timeline { margin-top: 72px; }
+      .cap-head .eyebrow, .cases-head .eyebrow { grid-column: 1; }
+      .cap-head h2, .cases-head h2, .archive-head h2 { grid-column: 1 / span 3; }
+      .cap-grid, .flow-steps { grid-template-columns: repeat(2, 1fr); }
+      .cap-item:nth-child(2n), .flow-step:nth-child(2n) { border-right: 1px solid var(--line); }
+      .project { min-height: auto; margin-bottom: 100px; }
+      .project-media, .project.reverse .project-media { grid-column: 1 / span 3; grid-row: auto; }
+      .project-copy, .project.reverse .project-copy { grid-column: 1 / span 3; grid-row: auto; padding: 28px 0; }
+      .archive-card { flex-basis: 76vw; }
+      .archive-pdf-list { grid-template-columns: 1fr; }
+      .archive-pdf-list a:nth-child(n) { padding: 16px 0; border-right: 0; }
+      .brand-cell { flex-basis: 33.3333%; }
+      .brand-cell:nth-child(3n) { border-right: 1px solid var(--line); }
+      .contact-copy { grid-column: 1 / span 3; }
+      .dialog-grid { grid-template-columns: 1fr; }
+      .dialog-visual, .dialog-copy { grid-column: 1; }
+      .dialog-visual { min-height: 48svh; border-right: 0; border-bottom: 1px solid var(--line); }
+    }
+
+    @media (max-width: 560px) {
+      .nav a { align-items: flex-start; flex-direction: column; justify-content: center; gap: 2px; }
+      .nav-cn { font-size: 11px; }
+      .hero-copy { top: 18svh; left: 4%; width: 92%; transform: none; }
+      .hero-intro { font-size: clamp(22px, 5vw, 29px); }
+      .hero-detail { max-width: 34ch; margin-top: 14px; font-size: 13px; }
+      .hero-portrait { right: -5vw; width: 64vw; height: 43svh; }
+      .hero-meta { right: 3vw; bottom: 2svh; font-size: 10px; }
+      .timeline-item { grid-template-columns: 90px 1fr; }
+      .timeline-copy { grid-column: 2; }
+      .cap-grid, .flow-steps { grid-template-columns: 1fr; }
+      .cap-item, .cap-item:nth-child(2n), .flow-step, .flow-step:nth-child(2n) { border-right: 1px solid var(--line); }
+      .archive-card { flex-basis: 88vw; }
+      .brand-cell { flex-basis: 50%; }
+      .brand-cell:nth-child(3n) { border-right: 0; }
+      .brand-cell:nth-child(2n) { border-right: 1px solid var(--line); }
+      .brand-cell img.logo-lynk { transform: scale(2.4); }
+      .brand-cell img.logo-ford { transform: scale(.95); }
+      .contact { display: block; min-height: 0; padding: 0 0 28px; }
+      .contact-corner-row { position: relative; left: auto; right: auto; gap: 18px; margin: 0 var(--pad); font-size: 10px; }
+      .contact-corner-row.top { top: auto; padding-top: 110px; }
+      .contact-corner-row.bottom { bottom: auto; padding-top: 64px; }
+      .contact-grid { margin-top: 65px; }
+      .contact-copy h2 { height: 110px; }
+      .contact-clock { min-width: 0; gap: 10px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+      .opening { height: 100svh; }
+      .opening-video, .archive-video { display: none; }
+      .opening-sticky { background: var(--black) url("assets/cyk-glass-poster.jpg") center / cover no-repeat; }
+      .opening-shade { opacity: .75; }
+      .wordmark { opacity: 1; }
+      .hero-copy { top: 56%; left: 4%; width: 51%; opacity: 1; }
+      .hero-portrait, .hero-meta { opacity: 1; transform: none; }
+      .archive { background: var(--black) url("assets/cyk-contact-poster.jpg") center / cover no-repeat; }
+      .contact-logo-video { display: none; }
+      .contact { background: #000 url("assets/cyk-footer-logo-poster.png") center / contain no-repeat; }
+    }
+  </style>
+</head>
+<body>
+  <svg width="0" height="0" aria-hidden="true" focusable="false"><filter id="fulwin-cutout" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="0 0 0 0 .73  0 0 0 0 .73  0 0 0 0 .73  .72 .72 .72 0 -1.04"/></filter><filter id="white-logo-cutout" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="0 0 0 0 .73  0 0 0 0 .73  0 0 0 0 .73  -3.33 -3.33 -3.33 0 10" result="key"/><feComposite in="key" in2="SourceAlpha" operator="in"/></filter></svg>
+  <nav class="nav" aria-label="主导航">
+    <a href="#home" class="active"><span>Home</span><span class="nav-cn">首页</span></a>
+    <a href="#profile"><span>Profile</span><span class="nav-cn">简历</span></a>
+    <a href="#capability"><span>Capability</span><span class="nav-cn">能力</span></a>
+    <a href="#cases"><span>Cases</span><span class="nav-cn">重点案例</span></a>
+    <a href="#archive"><span>Archive</span><span class="nav-cn">更多作品</span></a>
+    <a href="#contact"><span>Contact</span><span class="nav-cn">联系</span></a>
+  </nav>
+
+  <main>
+    <div class="opening" id="home">
+      <div class="opening-sticky">
+        <video class="opening-video" autoplay muted loop playsinline preload="metadata" poster="assets/cyk-glass-poster.jpg" aria-hidden="true">
+          <source src="assets/cyk-glass-hero.mp4" type="video/mp4">
+        </video>
+        <div class="opening-shade" aria-hidden="true"></div>
+        <header class="wordmark"><img class="wordmark-art" src="assets/cyk-header-wordmark.svg" alt="CHEN YIKE 陈艺科"></header>
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="grid-lines" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="section-inner hero-inner">
+        <div class="hero-copy">
+          <span class="eyebrow">Profile / 01 — Agency × Automotive × Business</span>
+          <h1 id="hero-title"><span>陈艺科</span><span>CHEN YIKE</span></h1>
+          <p class="hero-intro">10年品牌创意与营销经验，横跨广告与汽车行业。</p>
+          <p class="hero-detail">6年广告行业积累，覆盖品牌设计、联名、展会与传播。深度参与主机厂车型共创与上市，带领10人+跨职能团队，并以AI拓展设计与营销能力。</p>
+        </div>
+        <figure class="hero-portrait">
+          <img src="assets/cyk-portrait-halftone.png" alt="陈艺科的黑白点阵肖像">
+        </figure>
+        <aside class="hero-meta">
+          <strong>品牌X营销X管理</strong>
+          1990.05.11<br>
+          36 YEARS OLD<br>
+          CHINA / SHANGHAI
+        </aside>
+      </div>
+    </section>
+      </div>
+    </div>
+
+    <section class="manifesto" aria-label="个人职业主张">
+      <div class="grid-lines" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="section-inner manifesto-grid">
+        <div class="manifesto-copy">
+          <span class="eyebrow">Working perspective / 双向视角</span>
+          <p>让创意走出提案，<span>进入生产，走向市场。</span></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="profile" id="profile" aria-labelledby="profile-title">
+      <div class="grid-lines" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="section-inner profile-grid">
+        <aside class="profile-data">
+          <span class="eyebrow">Profile / Career</span>
+          <h2 id="profile-title">个人资料<br>与经历</h2>
+          <dl class="data-list">
+            <div><dt>Name</dt><dd>陈艺科 / CHEN YIKE</dd></div>
+            <div><dt>Born</dt><dd>1990.05.11 / 36 岁</dd></div>
+            <div><dt>Education</dt><dd>LASALLE College of the Arts<br><span class="eyebrow">学位 / 专业 / 年份待确认</span></dd></div>
+            <div><dt>Language</dt><dd>中文 / 英文</dd></div>
+            <div><dt>Phone</dt><dd>186 7409 0511</dd></div>
+            <div><dt>WeChat</dt><dd>cml_222</dd></div>
+            <div><dt>Email</dt><dd>278067361@qq.com</dd></div>
+          </dl>
+        </aside>
+
+        <div class="timeline" aria-label="职业履历">
+          <article class="timeline-item">
+            <div class="timeline-year">2017—2019</div>
+            <div class="timeline-title">上海卓越形象广告有限公司<small>视觉中国 / 资深美术指导 SAD</small></div>
+            <div class="timeline-copy">以老板电器为主，负责品牌联名与 Campaign 创意。建立成熟的<strong>代理端创意、提案与交付</strong>能力。</div>
+          </article>
+          <article class="timeline-item">
+            <div class="timeline-year">2019—2020</div>
+            <div class="timeline-title">DRD4 公关<small>资深美术指导 SAD / 管理 1 人</small></div>
+            <div class="timeline-copy">参与 Under Armour、麦当劳、哈尔滨啤酒新年 Campaign、小程序与联名活动。</div>
+          </article>
+          <article class="timeline-item">
+            <div class="timeline-year">2020—2022</div>
+            <div class="timeline-title">STARNET 科技有限公司<small>创意副总监 ACD / 管理 3–4 人</small></div>
+            <div class="timeline-copy">服务麦斯威尔、奥地利红牛、腾讯游戏、保乐力加与嘉士伯集团等，覆盖线上线下，积累多个完整 Campaign 从创意到落地的<strong>全案经验</strong>。</div>
+          </article>
+          <article class="timeline-item">
+            <div class="timeline-year">2022-2024</div>
+            <div class="timeline-title">上海聚光科技有限公司<small>品牌总监 CD / 管理 10 人+</small></div>
+            <div class="timeline-copy">为推进 WATER PROJECT 与主机厂项目协作，阶段性加入聚光；主导岚图 FREE DNA 0–1 上市与 iCAR 03 项目落地。</div>
+          </article>
+          <article class="timeline-item">
+            <div class="timeline-year">2022—2026</div>
+            <div class="timeline-title">WATER PROJECT<small>合伙人 / 品牌营销负责人 CMO</small></div>
+            <div class="timeline-copy">2023 年后逐步恢复独立经营。连接主机厂共创、车型项目、后装产品、展会体验与品牌传播，承担经营与交付责任。</div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="capability" id="capability" aria-labelledby="cap-title">
+      <div class="grid-lines" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="section-inner">
+        <header class="cap-head"><span class="eyebrow">Capability / 02</span><h2 id="cap-title">从品牌策略<br>到项目落地。</h2></header>
+        <div class="cap-grid">
+          <article class="cap-item"><span class="eyebrow">B01 / Leadership</span><b>团队<br>管理</b><p>最高管理 10 人品牌创意团队，覆盖 3D、平面、美术指导、品牌及策划文案。</p></article>
+          <article class="cap-item"><span class="eyebrow">B02 / Co-Creation</span><b>主机厂<br>共创 0→1</b><p>连接用户、市场、车型定义、品牌概念、内容与发布。</p></article>
+          <article class="cap-item"><span class="eyebrow">B03 / Campaign</span><b>品牌<br>全案</b><p>从策略、概念到视觉、TVC、事件、包装和销售传播。</p></article>
+          <article class="cap-item"><span class="eyebrow">B04 / Business</span><b>后装<br>商业化</b><p>贯通产品机会、成本、打样、内容、销售与用户反馈。</p></article>
+          <article class="cap-item"><span class="eyebrow">B05 / Production</span><b>制造<br>协同</b><p>结合造型、CMF、材料、模具、成本、批量与周期推进落地。</p></article>
+          <article class="cap-item"><span class="eyebrow">B06 / AI</span><b>AI<br>效率增益</b><p>持续学习并搭建 AI 工作流，降本、提效、提质，拓展策略、3D、动效与网页能力。</p></article>
+        </div>
+        <div class="flow">
+          <span class="eyebrow">Production decision flow / 制造协同判断</span>
+          <h3>不止品牌与营销，视觉与设计；从战略层深入协同全链条落地</h3>
+          <div class="flow-steps">
+            <div class="flow-step"><span>01</span><b>市场与用户洞察</b></div>
+            <div class="flow-step"><span>02</span><b>产品造型与/CMF参与</b></div>
+            <div class="flow-step"><span>03</span><b>材料/工艺匹配与边界探索</b></div>
+            <div class="flow-step"><span>04</span><b>模具/成本考量与取舍</b></div>
+            <div class="flow-step"><span>05</span><b>打样/量产的验证与调整</b></div>
+            <div class="flow-step"><span>06</span><b>发布/交付的持续和拓展</b></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cases" id="cases" aria-labelledby="cases-title">
+      <div class="grid-lines" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="section-inner">
+        <header class="cases-head"><span class="eyebrow">Selected work / 03</span><h2 id="cases-title">从产品定义到品牌传播；<br>从空间体验到周边生态。<br>高质内容，传播与投入增效。</h2></header>
+
+        <article class="project" data-case="x3l">
+          <a class="project-media" href="x3l.html" aria-label="查看奇瑞风云 X3L 复古版案例"><img src="assets/x3l/hero.jpg" alt="奇瑞风云 X3L 复古版原子时代项目视觉" loading="lazy"><div class="project-media__title"><small>2025 / Concept → Official release</small>奇瑞风云 X3L 复古版<br>原子时代</div></a>
+          <div class="project-copy"><span class="eyebrow">Case 01 / Automotive co-creation</span><h3>原子时代</h3><p class="project-lead">以复古设计语言建立完整产品叙事，并推动它从概念走向样车、展车与正式发布。</p><ul class="project-points"><li><strong>角色：</strong>除汽车造型外，品牌与营销相关环节均参与并主导</li><li><strong>范围：</strong>车身拉花配色、内饰 CMF、提案、展台与全链路宣发</li><li><strong>状态：</strong>受门把手法规相关因素影响，上市节奏延后</li></ul><a class="project-open" href="x3l.html">Open case ↗</a></div>
+        </article>
+
+        <article class="project reverse" data-case="free-dna">
+          <a class="project-media" href="free-dna.html" aria-label="查看岚图 FREE DNA 案例"><span class="project-carousel"><img src="assets/free-dna/hero-01.jpg" alt="岚图 FREE DNA 共创车型" loading="lazy"><img src="assets/free-dna/hero-02.jpg" alt="岚图 FREE 改款与品牌传播" loading="lazy"></span><span class="project-media__title"><small>OEM co-creation / Design → Facelift</small>岚图 FREE DNA</span></a>
+          <div class="project-copy"><span class="eyebrow">Case 02 / OEM co-creation</span><h3>FREE DNA</h3><p class="project-lead">让共创品牌标识进入车型，并把首版造型语言延续到后续改款。</p><ul class="project-points"><li><strong>角色：</strong>深度参与品牌设计，主导完整车型落地链路</li><li><strong>过程：</strong>品牌手册、公众号、预热、发布与销售内容</li><li><strong>延续：</strong>首版前脸造型语言在改款中保留</li></ul><a class="project-open" href="free-dna.html">Open case ↗</a></div>
+        </article>
+
+        <article class="project" data-case="icar03">
+          <a class="project-media" href="icar03.html" aria-label="查看 iCAR 03 复古改装版案例"><img src="assets/icar03/hero.jpg" alt="iCAR 03 复古改装版项目视觉" loading="lazy"></a>
+          <div class="project-copy"><span class="eyebrow">Case 03 / 2023 Chengdu Motor Show</span><h3>iCAR 03</h3><p class="project-lead">iCAR 03 首个复古改装造型，引发 A 级车展关注。</p><ul class="project-points"><li><strong>设计：</strong>复古造型视觉与多版配色探索</li><li><strong>现场：</strong>展台主题、实车展示与观众互动</li><li><strong>传播：</strong>官方内容、媒体记录与用户讨论</li></ul><a class="project-open" href="icar03.html">Open case ↗</a></div>
+        </article>
+
+        <article class="project reverse" data-case="zeekr007">
+          <a class="project-media" href="007-z10.html" aria-label="查看极氪 007 与领克 Z10 双子星案例"><span class="project-carousel"><img src="assets/zeekr-twins/hero-007.jpg" alt="极氪 007 H2O 设计头图" loading="lazy"><img src="assets/zeekr-twins/hero-z10.jpg" alt="领克 Z10 H2O 设计头图" loading="lazy"></span><span class="project-media__title"><small>WATER PROJECT / 007 × Z10</small>以同系产品，快速完成0-1品牌建立</span></a>
+          <div class="project-copy"><span class="eyebrow">Case 04 / Aftermarket brand</span><h3>007 × Z10 双子星</h3><p class="project-lead">一套系列化设计，两款车型；从高质量内容传播，走到用户共创与产品交付。</p><ul class="project-points"><li><strong>007：</strong>渲染、调研、收订、量产与车主装车</li><li><strong>Z10：</strong>茶话会、设计解读、CO 客大会与实车展示</li><li><strong>意义：</strong>打开 WATER PROJECT 后装品牌的第一条成长路径</li></ul><a class="project-open" href="007-z10.html">Open case ↗</a></div>
+        </article>
+
+        <article class="project" data-case="qq3">
+          <a class="project-media" href="qq3.html" aria-label="查看 QQ3 复古版案例"><img src="assets/qq3/final-01.jpg" alt="QQ3 复古版城堡场景定稿视觉" loading="lazy"></a>
+          <div class="project-copy"><span class="eyebrow">Case 05 / Automotive ecosystem</span><h3>QQ3 复古版</h3><p class="project-lead">多风格复古场景，不止一台车，也是一套可延展的周边生态。</p><ul class="project-points"><li><strong>设计：</strong>从初稿到多主题定稿，建立场景化视觉</li><li><strong>经济性：</strong>沿用原车型色系，扩展更多选择</li><li><strong>生态：</strong>周边件、通用行李架与创意车顶拉花</li></ul><a class="project-open" href="qq3.html">Open case ↗</a></div>
+        </article>
+
+        <article class="project reverse" data-case="shenzhen">
+          <a class="project-media" href="shenzhen.html" aria-label="查看深圳改装展 2025 案例"><video src="assets/shenzhen/show.mp4" poster="assets/shenzhen/design-02.jpg" muted loop playsinline preload="metadata" data-play-on-view aria-label="深圳改装展 2025 展位现场视频"></video><div class="project-media__title"><small>2025 / Shenzhen</small>深圳改装展<span class="project-media__tagline">以设计最大化落地效果</span></div></a>
+          <div class="project-copy"><span class="eyebrow">Case 06 / Spatial experience</span><h3>赛道即展台</h3><p class="project-lead">把地面赛道、真实展车和互动驾驶连成一处体验现场。</p><ul class="project-points"><li><strong>周期：</strong>2 个月内完成设计、看场、落地与互动流程开发</li><li><strong>体验：</strong>模拟器及 VR 均可操控 RC 车</li><li><strong>投入：</strong>约 50 万元完成落地，其中约 25 万元为固定场地等费用</li></ul><a class="project-open" href="shenzhen.html">Open case ↗</a></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="archive" id="archive" aria-labelledby="archive-title">
+      <video class="archive-video" autoplay muted loop playsinline preload="metadata" poster="assets/cyk-contact-poster.jpg" aria-hidden="true"><source src="assets/cyk-contact-bg.mp4" type="video/mp4"></video>
+      <div class="grid-lines" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="section-inner archive-head"><span class="eyebrow">Automotive archive / 04</span><h2 id="archive-title">更多车型，<br>快速浏览。</h2></div>
+      <div class="archive-track" aria-label="横向滚动车型案例">
+        <article class="archive-card"><div class="archive-visual"><img src="assets/archive/01.jpg" alt="007GT红牛拉花" loading="lazy"></div><div class="archive-label"><strong>007GT红牛拉花</strong></div></article>
+        <article class="archive-card"><div class="archive-visual"><img src="assets/archive/02.jpg" alt="阿维塔12" loading="lazy"></div><div class="archive-label"><strong>阿维塔12</strong></div></article>
+        <article class="archive-card"><div class="archive-visual"><img src="assets/archive/03.jpg" alt="奔腾小马复古版设计图墨绿" loading="lazy"></div><div class="archive-label"><strong>奔腾小马复古版设计图墨绿</strong></div></article>
+        <article class="archive-card"><div class="archive-visual"><img src="assets/archive/04.jpg" alt="奔腾小马复古版设计图奶白" loading="lazy"></div><div class="archive-label"><strong>奔腾小马复古版设计图奶白</strong></div></article>
+        <article class="archive-card"><div class="archive-visual"><img src="assets/archive/05.jpg" alt="奔腾小马复古版渲染图" loading="lazy"></div><div class="archive-label"><strong>奔腾小马复古版渲染图</strong></div></article>
+        <article class="archive-card"><div class="archive-visual"><img src="assets/archive/06.jpg" alt="方程豹5" loading="lazy"></div><div class="archive-label"><strong>方程豹5</strong></div></article>
+        <article class="archive-card"><div class="archive-visual"><img src="assets/archive/07.jpg" alt="方程豹8" loading="lazy"></div><div class="archive-label"><strong>方程豹8</strong></div></article>
+        <article class="archive-card"><div class="archive-visual"><img src="assets/archive/08.jpg" alt="极氪X" loading="lazy"></div><div class="archive-label"><strong>极氪X</strong></div></article>
+        <article class="archive-card"><div class="archive-visual"><img src="assets/archive/09.jpg" alt="奇瑞无界PRO" loading="lazy"></div><div class="archive-label"><strong>奇瑞无界PRO</strong></div></article>
+        <article class="archive-card"><div class="archive-visual"><img src="assets/archive/10.jpg" alt="奇瑞小蚂蚁复古版" loading="lazy"></div><div class="archive-label"><strong>奇瑞小蚂蚁复古版</strong></div></article>
+        <article class="archive-card"><div class="archive-visual"><img src="assets/archive/11.jpg" alt="奇瑞小蚂蚁运动版" loading="lazy"></div><div class="archive-label"><strong>奇瑞小蚂蚁运动版</strong></div></article>
+        <article class="archive-card"><div class="archive-visual"><img src="assets/archive/12.jpg" alt="太浩黑色" loading="lazy"></div><div class="archive-label"><strong>太浩黑色</strong></div></article>
+        <article class="archive-card"><div class="archive-visual"><img src="assets/archive/13.jpg" alt="太浩银色" loading="lazy"></div><div class="archive-label"><strong>太浩银色</strong></div></article>
+        <article class="archive-card"><div class="archive-visual"><img src="assets/archive/14.jpg" alt="BRONCO" loading="lazy"></div><div class="archive-label"><strong>BRONCO</strong></div></article>
+        <article class="archive-card"><div class="archive-visual"><img src="assets/archive/15.jpg" alt="JEEP角斗士" loading="lazy"></div><div class="archive-label"><strong>JEEP角斗士</strong></div></article>
+        <article class="archive-card"><div class="archive-visual"><img src="assets/archive/16.jpg" alt="JEEP牧马人" loading="lazy"></div><div class="archive-label"><strong>JEEP牧马人</strong></div></article>
+        <article class="archive-card"><div class="archive-visual"><img src="assets/archive/17.jpg" alt="MG5 100TH" loading="lazy"></div><div class="archive-label"><strong>MG5 100TH</strong></div></article>
+        <article class="archive-card"><div class="archive-visual"><img src="assets/archive/18.jpg" alt="RANGER蓝白" loading="lazy"></div><div class="archive-label"><strong>RANGER蓝白</strong></div></article>
+        <article class="archive-card"><div class="archive-visual"><img src="assets/archive/19.jpg" alt="RANGER银色" loading="lazy"></div><div class="archive-label"><strong>RANGER银色</strong></div></article>
+      </div>
+      <div class="section-inner archive-downloads"><span class="eyebrow">Selected PDFs / Download</span><h3>部分案例完整PDF下载</h3><div class="archive-pdf-list">
+        <a href="assets/archive-pdf/avatr-12.pdf" download><span>AVATR 12</span><small>PDF 下载 ↗</small></a>
+        <a href="assets/archive-pdf/jeep-wrangler.pdf" download><span>JEEP牧马人</span><small>PDF 下载 ↗</small></a>
+        <a href="assets/archive-pdf/zeekr-x.pdf" download><span>ZEEKR X</span><small>PDF 下载 ↗</small></a>
+        <a href="assets/archive-pdf/chery-ant.pdf" download><span>奇瑞小蚂蚁</span><small>PDF 下载 ↗</small></a>
+        <a href="assets/archive-pdf/bestune-pony.pdf" download><span>奔腾小马</span><small>PDF 下载 ↗</small></a>
+        <a href="assets/archive-pdf/fangchengbao-5.pdf" download><span>方程豹5</span><small>PDF 下载 ↗</small></a>
+        <a href="assets/archive-pdf/fangchengbao-8.pdf" download><span>方程豹8</span><small>PDF 下载 ↗</small></a>
+        <a href="assets/archive-pdf/durang-tahoe.pdf" download><span>道朗格太浩</span><small>PDF 下载 ↗</small></a>
+      </div><p class="archive-confidential">部分优质案例因保密需求仅可线下展示</p></div>
+    </section>
+
+    <section class="brands" aria-labelledby="brands-title">
+      <div class="grid-lines" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="section-inner">
+        <div class="brand-group"><span class="eyebrow">Automotive brands / 05</span><h2 id="brands-title">主机厂合作品牌</h2><div class="brand-wall">
+          <div class="brand-cell"><img class="logo-fulwin logo-md" src="assets/brands/fulwin.png" alt="奇瑞风云 FULWIN" loading="lazy"></div>
+          <div class="brand-cell"><img class="logo-on-white" src="assets/brands/icar.png" alt="iCAR" loading="lazy"></div>
+          <div class="brand-cell"><img src="assets/brands/voyah.png" alt="岚图 VOYAH" loading="lazy"></div>
+          <div class="brand-cell"><img src="assets/brands/zeekr.png" alt="极氪 ZEEKR" loading="lazy"></div>
+          <div class="brand-cell"><img class="logo-on-white" src="assets/brands/jetour-user.png" alt="捷途 JETOUR" loading="lazy"></div>
+          <div class="brand-cell"><img src="assets/brands/bestune.svg" alt="一汽奔腾 BESTUNE" loading="lazy"></div>
+          <div class="brand-cell"><img src="assets/brands/avatr.png" alt="阿维塔 AVATR" loading="lazy"></div>
+          <div class="brand-cell"><img src="assets/brands/baojun.png" alt="宝骏 BAOJUN" loading="lazy"></div>
+          <div class="brand-cell"><img src="assets/brands/jeep.png" alt="Jeep" loading="lazy"></div>
+          <div class="brand-cell"><img src="assets/brands/nio.png" alt="蔚来 NIO" loading="lazy"></div>
+          <div class="brand-cell"><img src="assets/brands/tank.png" alt="坦克 TANK" loading="lazy"></div>
+          <div class="brand-cell"><img src="assets/brands/tesla.svg" alt="特斯拉 TESLA" loading="lazy"></div>
+          <div class="brand-cell"><img class="logo-lg" src="assets/brands/chery-new-energy.png" alt="奇瑞新能源" loading="lazy"></div>
+          <div class="brand-cell"><img src="assets/brands/wuling.png" alt="五菱" loading="lazy"></div>
+          <div class="brand-cell"><img class="logo-md" src="assets/brands/gac-motor.png" alt="广汽传祺" loading="lazy"></div>
+          <div class="brand-cell"><img src="assets/brands/fangchengbao.png" alt="方程豹" loading="lazy"></div>
+          <div class="brand-cell"><img class="logo-lynk" src="assets/brands/lynkco.png" alt="领克 LYNK &amp; CO" loading="lazy"></div>
+          <div class="brand-cell"><img src="assets/brands/faw-volkswagen-user.png" alt="一汽大众" loading="lazy"></div>
+          <div class="brand-cell"><img src="assets/brands/jetta.png" alt="捷达 JETTA" loading="lazy"></div>
+          <div class="brand-cell"><img src="assets/brands/chevrolet.png" alt="雪佛兰" loading="lazy"></div>
+          <div class="brand-cell"><img src="assets/brands/li-auto.png" alt="理想汽车" loading="lazy"></div>
+          <div class="brand-cell"><img src="assets/brands/ora.png" alt="欧拉 ORA" loading="lazy"></div>
+          <div class="brand-cell"><img src="assets/brands/hongqi.png" alt="红旗" loading="lazy"></div>
+          <div class="brand-cell"><img class="logo-ford" src="assets/brands/ford-user.png" alt="福特 FORD" loading="lazy"></div>
+          <div class="brand-cell"><img src="assets/brands/geely-galaxy.svg" alt="吉利银河 GEELY GALAXY" loading="lazy"></div>
+          <div class="brand-cell"><img src="assets/brands/mg.svg" alt="名爵 MG" loading="lazy"></div>
+          <div class="brand-cell"><img class="logo-audi" src="assets/brands/audi.svg" alt="奥迪 AUDI" loading="lazy"></div>
+          <div class="brand-cell"><img src="assets/brands/durang-user.png" alt="道朗格 The Durant Guild" loading="lazy"></div>
+          <div class="brand-cell"><img src="assets/brands/im-motors.svg" alt="智己 IM Motors" loading="lazy"></div>
+          <div class="brand-cell"><img src="assets/brands/catl-user.png" alt="宁德时代 CATL" loading="lazy"></div>
+        </div></div>
+        <div class="brand-group agency-brands"><span class="eyebrow">Agency-side clients / 06</span><h2>广告行业服务品牌</h2><div class="brand-wall">
+          <div class="brand-cell"><img src="assets/brands/underarmour.svg" alt="UNDER ARMOUR" loading="lazy"></div>
+          <div class="brand-cell"><img src="assets/brands/mcdonalds.svg" alt="麦当劳" loading="lazy"></div>
+          <div class="brand-cell"><img src="assets/brands/shiseido.svg" alt="资生堂" loading="lazy"></div>
+          <div class="brand-cell"><img src="assets/brands/tourism-new-zealand.png" alt="新西兰旅游局 Tourism New Zealand" loading="lazy"></div>
+          <div class="brand-cell"><img class="logo-disney" src="assets/brands/disney-pictures.svg" alt="迪士尼电影 Walt Disney Pictures" loading="lazy"></div>
+          <div class="brand-cell"><img src="assets/brands/starbucks.svg" alt="星巴克" loading="lazy"></div>
+          <div class="brand-cell"><img src="assets/brands/budweiser-wordmark.svg" alt="百威 Budweiser 单色字标" loading="lazy"></div>
+          <div class="brand-cell"><img src="assets/brands/zippo.svg" alt="ZIPPO" loading="lazy"></div>
+          <div class="brand-cell"><img class="logo-sm" src="assets/brands/skii.svg" alt="SK-II" loading="lazy"></div>
+          <div class="brand-cell"><img src="assets/brands/robam.svg" alt="老板电器" loading="lazy"></div>
+          <div class="brand-cell"><img class="logo-lg" src="assets/brands/panasonic.svg" alt="松下电器" loading="lazy"></div>
+          <div class="brand-cell"><img src="assets/brands/daikin.svg" alt="大金空调" loading="lazy"></div>
+          <div class="brand-cell"><img class="logo-lg" src="assets/brands/vivo.svg" alt="vivo" loading="lazy"></div>
+          <div class="brand-cell"><img class="logo-lg" src="assets/brands/nasa.svg" alt="NASA" loading="lazy"></div>
+          <div class="brand-cell"><img class="logo-wuliangye" src="assets/brands/wuliangye-user.png" alt="五粮液" loading="lazy"></div>
+          <div class="brand-cell"><img src="assets/brands/maxwell-house.png" alt="麦斯威尔 Maxwell House" loading="lazy"></div>
+          <div class="brand-cell"><img class="logo-yuewen" src="assets/brands/yuewen-user.png" alt="阅文集团" loading="lazy"></div>
+          <div class="brand-cell"><img class="logo-pernod" src="assets/brands/pernod-ricard.svg" alt="保乐力加集团" loading="lazy"></div>
+          <div class="brand-cell"><img src="assets/brands/bacardi.svg" alt="百加得集团" loading="lazy"></div>
+          <div class="brand-cell"><img src="assets/brands/loreal.svg" alt="欧莱雅 L'Oréal" loading="lazy"></div>
+          <div class="brand-cell"><img class="logo-tone" src="assets/brands/redbull-full.svg" alt="奥地利红牛 Red Bull" loading="lazy"></div>
+          <div class="brand-cell"><img class="logo-nb" src="assets/brands/newbalance-full.svg" alt="New Balance" loading="lazy"></div>
+          <div class="brand-cell"><img src="assets/brands/carlsberg.png" alt="嘉士伯集团" loading="lazy"></div>
+          <div class="brand-cell"><img src="assets/brands/tencent.svg" alt="腾讯" loading="lazy"></div>
+          <div class="brand-cell"><img src="assets/brands/givenchy.svg" alt="纪梵希" loading="lazy"></div>
+          <div class="brand-cell"><img src="assets/brands/continental.svg" alt="马牌轮胎 Continental" loading="lazy"></div>
+          <div class="brand-cell"><img src="assets/brands/lavazza.svg" alt="Lavazza" loading="lazy"></div>
+          <div class="brand-cell"><img src="assets/brands/honor-of-kings.png" alt="王者荣耀 Honor of Kings" loading="lazy"></div>
+          <div class="brand-cell"><img src="assets/brands/kfc-user.png" alt="KFC" loading="lazy"></div>
+          <div class="brand-cell"><img src="assets/brands/taco-bell.png" alt="Taco Bell" loading="lazy"></div>
+        </div></div>
+      </div>
+    </section>
+
+    <section class="contact" id="contact" aria-labelledby="contact-title">
+      <video class="contact-logo-video" autoplay muted loop playsinline preload="metadata" poster="assets/cyk-footer-logo-poster.png" aria-hidden="true"><source src="assets/cyk-footer-logo.mp4" type="video/mp4"></video>
+      <div class="contact-corner-row top">
+        <div><a href="#home">HOME / 首页</a><a href="#profile">PROFILE / 简历</a><a href="#capability">CAPABILITY / 能力</a><a href="#cases">CASES / 案例</a><a href="#archive">ARCHIVE / 更多作品</a><a href="#contact">CONTACT / 联系</a></div>
+        <div class="right" aria-label="个人创作方向"><span>↗ BRAND THINKING / 品牌思考</span><br><span>↗ AUTOMOTIVE CULTURE / 汽车文化</span><br><span>↗ CREATIVE EXECUTION / 创意落地</span></div>
+      </div>
+      <div class="section-inner contact-grid">
+        <div class="contact-copy"><span class="eyebrow light">Contact / 07</span><h2 id="contact-title" aria-label="CHEN YIKE 陈艺科"></h2><div class="contact-links"><a href="tel:+8618674090511">186 7409 0511</a><a href="mailto:278067361@qq.com">278067361@qq.com</a></div><div class="wechat-card"><div class="qr-placeholder"><img src="assets/cyk-wechat-qr.png" alt="微信二维码，微信号 cml_222"></div><div><strong>WECHAT / cml_222</strong><span>SCAN TO CONNECT</span></div></div></div>
+      </div>
+      <div class="contact-corner-row bottom">
+        <div><span>◉ CHINA STANDARD TIME</span><div class="contact-clock"><span>CHINA / UTC+08:00</span><strong id="china-time" aria-label="中国标准时间"></strong></div></div>
+        <div class="right">PORTFOLIO<br>@2026CHENYIKE<br>ALLRIGHTRESERVED&#x20;</div>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="case-dialog" aria-labelledby="dialog-title">
+    <button class="dialog-close" type="button" aria-label="关闭案例">×</button>
+    <div class="dialog-grid"><div class="dialog-visual visual-placeholder"><div><strong>CASE<br>DETAIL</strong><span>方案素材待逐页置入</span></div></div><div class="dialog-copy"><span class="eyebrow">Case detail / 内容框架</span><h2 id="dialog-title"></h2><p id="dialog-summary"></p><div class="dialog-slots"><div class="dialog-slot">01 / 项目背景与问题</div><div class="dialog-slot">02 / 关键判断与个人角色</div><div class="dialog-slot">03 / 设计、制造与传播过程</div><div class="dialog-slot">04 / 结果与可验证证据</div><div class="dialog-slot">05 / PDF 详情下载（待生成）</div></div></div></div>
+  </dialog>
+
+  <script>
+    const opening = document.querySelector('.opening');
+    const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
+    const root = document.documentElement;
+    const clamp = value => Math.max(0, Math.min(value, 1));
+    let openingFrame = 0;
+    const updateOpening = () => {
+      const progress = clamp(scrollY / Math.max(1, opening.offsetHeight - innerHeight));
+      const logoExit = clamp(progress / .30);
+      const copy = clamp((progress - .13) / .18);
+      const shade = clamp((progress - .38) / .38);
+      const shift = clamp((progress - .42) / .38);
+      const portrait = clamp((progress - .63) / .23);
+      root.style.setProperty('--wordmark-opacity', (1 - logoExit).toFixed(3));
+      root.style.setProperty('--wordmark-y', `${Math.round(-30 * logoExit)}px`);
+      root.style.setProperty('--copy-opacity', copy.toFixed(3));
+      root.style.setProperty('--opening-shade', shade.toFixed(3));
+      root.style.setProperty('--copy-top', `${(75 - 23 * shift).toFixed(2)}%`);
+      root.style.setProperty('--copy-left', `${(27 - 14 * shift).toFixed(2)}%`);
+      root.style.setProperty('--copy-width', `${(62 - 22 * shift).toFixed(2)}%`);
+      root.style.setProperty('--portrait-reveal', portrait.toFixed(3));
+      root.style.setProperty('--portrait-x', `${(7 * (1 - portrait)).toFixed(2)}vw`);
+      const navTop = Math.max(0, innerWidth * 208 / 1920 - scrollY);
+      root.style.setProperty('--nav-top', `${Math.round(navTop)}px`);
+      root.style.setProperty('--nav-alpha', (Math.min(.88, .04 + scrollY / 250)).toFixed(3));
+      root.style.setProperty('--nav-blur', `${Math.round(16 * clamp(scrollY / 240))}px`);
+      openingFrame = 0;
+    };
+    addEventListener('scroll', () => {
+      if (!openingFrame) openingFrame = requestAnimationFrame(updateOpening);
+    }, { passive: true });
+    addEventListener('resize', updateOpening);
+    reduceMotion.addEventListener('change', updateOpening);
+    updateOpening();
+    const chinaTime = document.querySelector('#china-time');
+    const updateChinaTime = () => { chinaTime.textContent = new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Shanghai', hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date()); };
+    updateChinaTime();
+    setInterval(updateChinaTime, 30000);
+    const videoObserver = new IntersectionObserver(entries => entries.forEach(entry => {
+      const video = entry.target;
+      if (entry.isIntersecting && !reduceMotion.matches) video.play().catch(() => {});
+      else video.pause();
+    }));
+    document.querySelectorAll('video[autoplay], video[data-play-on-view]').forEach(video => videoObserver.observe(video));
+
+    const navLinks = [...document.querySelectorAll('.nav a')];
+    const sections = navLinks.map(link => document.querySelector(link.getAttribute('href'))).filter(Boolean);
+    const observer = new IntersectionObserver(entries => entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      navLinks.forEach(link => link.classList.toggle('active', link.getAttribute('href') === `#${entry.target.id}`));
+    }), { rootMargin: '-30% 0px -65% 0px' });
+    sections.forEach(section => observer.observe(section));
+
+    const archive = document.querySelector('.archive-track');
+    archive.addEventListener('wheel', event => {
+      if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
+      archive.scrollLeft += event.deltaY;
+      event.preventDefault();
+    }, { passive: false });
+
+    const caseCopy = {
+      x3l: ['奇瑞风云 X3L 复古版 · 原子时代', '复古设计语言、CMF、提案、发布会与宣发链路。团队规模、周期、另外两项核心亮点和可公开结果仍待确认。'],
+    };
+    const dialog = document.querySelector('#case-dialog');
+    document.querySelectorAll('button.project-open, button.project-media').forEach(button => button.addEventListener('click', () => {
+      const key = button.closest('.project').dataset.case;
+      document.querySelector('#dialog-title').textContent = caseCopy[key][0];
+      document.querySelector('#dialog-summary').textContent = caseCopy[key][1];
+      dialog.showModal();
+      document.body.classList.add('locked');
+    }));
+    const closeDialog = () => { dialog.close(); document.body.classList.remove('locked'); };
+    document.querySelector('.dialog-close').addEventListener('click', closeDialog);
+    dialog.addEventListener('click', event => { if (event.target === dialog) closeDialog(); });
+    dialog.addEventListener('close', () => document.body.classList.remove('locked'));
+  </script>
+</body>
+</html>

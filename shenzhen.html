@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="陈艺科 / CHEN YIKE — 2025 深圳改装展：从展位设计到现场互动体验落地。">
+  <title>赛道即展台 — 深圳改装展 2025 / CHEN YIKE</title>
+  <style>
+    :root { --bg:#030405; --white:#f2f2f0; --muted:#a7a7a4; --line:rgba(242,242,240,.22); --soft:rgba(242,242,240,.09); --pad:clamp(18px,2.25vw,42px); --sans:"Helvetica Neue",Helvetica,"PingFang SC",Arial,sans-serif; }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; background:var(--bg); }
+    body { margin:0; color:var(--white); background:var(--bg); font-family:var(--sans); -webkit-font-smoothing:antialiased; }
+    a { color:inherit; }
+    img { display:block; max-width:100%; }
+    figure { margin:0; }
+    .topbar { position:sticky; top:0; z-index:10; display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:20px; min-height:56px; padding:0 var(--pad); border-bottom:1px solid var(--line); background:rgba(3,4,5,.94); backdrop-filter:blur(14px); font-size:11px; letter-spacing:.12em; text-transform:uppercase; }
+    .topbar a, .chapter-nav a, .foot a { text-decoration:none; }
+    .topbar a:hover, .chapter-nav a:hover, .foot a:hover { text-decoration:underline; text-underline-offset:5px; }
+    .topbar .center { color:var(--muted); }
+    .topbar .close { justify-self:end; }
+    .cover { border-bottom:1px solid var(--line); background:#080b10; }
+    .cover video { display:block; width:100%; max-height:calc(100svh - 56px); aspect-ratio:16/9; object-fit:contain; }
+    .cover figcaption { padding:12px var(--pad); color:var(--muted); font-size:11px; letter-spacing:.08em; text-transform:uppercase; }
+    .intro { display:grid; grid-template-columns:repeat(6,1fr); gap:24px; padding:clamp(42px,5vw,90px) var(--pad) clamp(80px,10vw,160px); border-bottom:1px solid var(--line); }
+    .eyebrow { color:var(--muted); font-size:11px; letter-spacing:.16em; line-height:1.5; text-transform:uppercase; }
+    .intro .eyebrow { grid-column:1 / 3; }
+    .intro-main { grid-column:3 / 7; }
+    h1 { margin:0; font-size:clamp(58px,9vw,160px); font-weight:400; line-height:.9; letter-spacing:-.075em; }
+    .lead { max-width:940px; margin:40px 0 58px; font-size:clamp(23px,2.4vw,43px); line-height:1.27; letter-spacing:-.035em; }
+    .lead span { color:var(--muted); }
+    .facts { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; border-top:1px solid var(--line); padding-top:18px; }
+    .facts dt { margin-bottom:14px; color:var(--muted); font-size:10px; letter-spacing:.14em; text-transform:uppercase; }
+    .facts dd { margin:0; font-size:15px; line-height:1.5; }
+    .facts small { display:block; margin-top:10px; color:var(--muted); font-size:11px; line-height:1.6; }
+    .cost-note { max-width:850px; margin:28px 0 0; color:var(--muted); font-size:12px; line-height:1.7; }
+    .chapter-nav { display:flex; gap:28px; padding:24px var(--pad); border-bottom:1px solid var(--line); font-size:11px; letter-spacing:.1em; text-transform:uppercase; }
+    .chapter { padding:110px var(--pad) 140px; border-bottom:1px solid var(--line); scroll-margin-top:56px; }
+    .chapter-head { display:grid; grid-template-columns:2fr 4fr; gap:24px; margin-bottom:58px; }
+    .chapter-head h2 { margin:0; font-size:clamp(48px,7vw,126px); font-weight:400; line-height:.9; letter-spacing:-.06em; }
+    .chapter-head p { max-width:760px; margin:26px 0 0; color:var(--muted); font-size:clamp(16px,1.3vw,23px); line-height:1.55; }
+    .chapter-head p strong { color:var(--white); font-weight:400; }
+    .image-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+    .shot { min-width:0; border:1px solid var(--soft); background:#0b0c0d; }
+    .shot.wide { grid-column:1 / -1; }
+    .shot img { width:100%; height:auto; }
+    .shot figcaption { display:flex; justify-content:space-between; gap:16px; padding:12px; color:var(--muted); font-size:11px; line-height:1.5; letter-spacing:.04em; }
+    .shot figcaption b { color:var(--white); font-weight:400; }
+    .shot figcaption span:last-child { text-align:right; }
+    .foot { display:flex; justify-content:space-between; gap:24px; padding:24px var(--pad) 45px; color:var(--muted); font-size:11px; letter-spacing:.08em; text-transform:uppercase; }
+    .foot a { color:var(--white); }
+    @media(max-width:800px) { .topbar { grid-template-columns:1fr auto; } .topbar .center { display:none; } .intro, .chapter-head { grid-template-columns:1fr; } .intro .eyebrow, .intro-main { grid-column:1; } .lead { margin:30px 0 42px; } .chapter { padding:80px var(--pad) 100px; } .chapter-head { margin-bottom:36px; } }
+    @media(max-width:560px) { .facts, .image-grid { grid-template-columns:1fr; } .shot.wide { grid-column:1; } .foot { flex-direction:column; } }
+  </style>
+</head>
+<body>
+  <header class="topbar"><a href="index.html#cases" aria-label="返回作品集">CHEN YIKE / 陈艺科</a><span class="center">Portfolio / Case 06 — Shenzhen</span><a class="close" href="index.html#cases">Close ✕</a></header>
+  <main>
+    <figure class="cover"><video src="assets/shenzhen/show.mp4" poster="assets/shenzhen/design-02.jpg" muted loop playsinline controls preload="metadata" aria-label="深圳改装展展位设计与现场视频"></video><figcaption>Shenzhen Custom Auto Show / 2025 · 项目视频</figcaption></figure>
+    <section class="intro" aria-labelledby="case-title">
+      <div class="eyebrow">Case 06 / Spatial experience<br>Shenzhen · 2025</div>
+      <div class="intro-main">
+        <h1 id="case-title">赛道即展台。</h1>
+        <p class="lead">在与主机厂同馆的展会里，让一块展位成为可观看、可参与的赛道。<span>从空间设计到模拟器与 VR 操控 RC 车，2 个月内完成设计、看场、搭建落地及互动流程开发。</span></p>
+        <dl class="facts"><div><dt>Timeline / 周期</dt><dd>2 个月内<small>设计、看场、落地与互动流程开发</small></dd></div><div><dt>Delivery / 现场</dt><dd>模拟器 + VR<small>均可现场操控 RC 车；成为现场人流聚集区</small></dd></div><div><dt>Budget / 投入</dt><dd>约 50 万元<small>其中约 25 万元为场地、管理、水电等固定费用</small></dd></div></dl>
+        <p class="cost-note">项目成本为本人提供的项目口径。与同类项目通常约 100–200 万元的对比，属于项目经验估算，并非公开市场报价或第三方审计数据。</p>
+      </div>
+    </section>
+    <nav class="chapter-nav" aria-label="项目章节"><a href="#design">01 / 设计稿</a><a href="#onsite">02 / 现场照片</a></nav>
+    <section class="chapter" id="design" aria-labelledby="design-title">
+      <div class="chapter-head"><span class="eyebrow">01 / Design proposal</span><div><h2 id="design-title">先把赛道，<br>画进展台。</h2><p>以环形赛道作为地面主视觉，结合桁架、赛车展示、模拟驾驶位与观众动线，形成<strong>从设计稿到现场可执行的空间方案</strong>。</p></div></div>
+      <div class="image-grid">
+        <figure class="shot wide"><img src="assets/shenzhen/design-01.jpg" alt="展台设计稿：环形赛道与模拟驾驶位的俯视方案" loading="lazy"><figcaption><b>展台整体布局 / 俯视</b><span>Design 01</span></figcaption></figure>
+        <figure class="shot"><img src="assets/shenzhen/design-02.jpg" alt="展台设计稿：入口、桁架与赛车展示效果" loading="lazy"><figcaption><b>入口与正面视角</b><span>Design 02</span></figcaption></figure>
+        <figure class="shot"><img src="assets/shenzhen/design-03.jpg" alt="展台设计稿：赛道与赛车的另一正面视角" loading="lazy"><figcaption><b>赛道与展示区</b><span>Design 03</span></figcaption></figure>
+        <figure class="shot"><img src="assets/shenzhen/design-04.jpg" alt="展台设计稿：展位斜俯视整体效果" loading="lazy"><figcaption><b>整体空间视角 A</b><span>Design 04</span></figcaption></figure>
+        <figure class="shot"><img src="assets/shenzhen/design-05.jpg" alt="展台设计稿：展位另一侧整体效果" loading="lazy"><figcaption><b>整体空间视角 B</b><span>Design 05</span></figcaption></figure>
+        <figure class="shot"><img src="assets/shenzhen/design-06.jpg" alt="2025 深圳国际性能及定制改装汽车展览会展位邀请函设计" loading="lazy"><figcaption><b>展位邀请函</b><span>Design 06</span></figcaption></figure>
+      </div>
+    </section>
+    <section class="chapter" id="onsite" aria-labelledby="onsite-title">
+      <div class="chapter-head"><span class="eyebrow">02 / On-site delivery</span><div><h2 id="onsite-title">从效果图，<br>到现场体验。</h2><p>展台按方案落地。现场可通过<strong>模拟器或 VR 操控 RC 车</strong>，地面赛道让互动体验与视觉识别连为一体；展位成为同馆的流量聚集点。</p></div></div>
+      <div class="image-grid">
+        <figure class="shot wide"><img src="assets/shenzhen/onsite-01.jpg" alt="深圳改装展现场：从高处俯拍环形赛道与展车" loading="lazy"><figcaption><b>展位现场 / 俯视</b><span>On site 01</span></figcaption></figure>
+        <figure class="shot"><img src="assets/shenzhen/onsite-02.jpg" alt="深圳改装展现场：观众用方向盘模拟器操控赛道上的 RC 车" loading="lazy"><figcaption><b>模拟器操控 RC 车</b><span>On site 02</span></figcaption></figure>
+        <figure class="shot"><img src="assets/shenzhen/onsite-03.jpg" alt="深圳改装展现场照片 03" loading="lazy"><figcaption><b>现场记录 03</b><span>On site 03</span></figcaption></figure>
+        <figure class="shot"><img src="assets/shenzhen/onsite-04.jpg" alt="深圳改装展现场照片 04" loading="lazy"><figcaption><b>现场记录 04</b><span>On site 04</span></figcaption></figure>
+        <figure class="shot"><img src="assets/shenzhen/onsite-05.jpg" alt="深圳改装展现场照片 05" loading="lazy"><figcaption><b>现场记录 05</b><span>On site 05</span></figcaption></figure>
+      </div>
+    </section>
+  </main>
+  <footer class="foot"><a href="index.html#cases">← 返回作品集</a><span>CHEN YIKE / 陈艺科 · 2026</span><a href="index.html#contact">联系 ↗</a></footer>
+  <script>
+    const video = document.querySelector('.cover video');
+    const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
+    new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && !reduceMotion.matches) video.play().catch(() => {});
+      else video.pause();
+    }, { threshold:.3 }).observe(video);
+  </script>
+</body>
+</html>
